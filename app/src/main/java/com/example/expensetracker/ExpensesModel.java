@@ -2,7 +2,7 @@ package com.example.expensetracker;
 
 import java.time.LocalDate;
 
-public class DBHelper {
+public class ExpensesModel {
 
     private int id;
     private String expenseCategory;
@@ -12,7 +12,7 @@ public class DBHelper {
 
     // constructors
 
-    public DBHelper(int id, float amount, String expenseCategory, String walletCategory, LocalDate dateOfExpense) {
+    public ExpensesModel(int id, float amount, String expenseCategory, String walletCategory, LocalDate dateOfExpense) {
         this.id = id;
         this.expenseCategory = expenseCategory;
         this.amount = amount;
@@ -20,7 +20,7 @@ public class DBHelper {
         this.dateOfExpense = dateOfExpense;
     }
 
-    public DBHelper() {
+    public ExpensesModel() {
     }
 
     // toString is necessary for printing contents of class object
