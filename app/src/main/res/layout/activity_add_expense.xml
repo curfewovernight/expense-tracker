@@ -15,7 +15,7 @@
         android:layout_marginEnd="16dp"
         android:ems="10"
         android:hint="Amount"
-        android:inputType="textPersonName"
+        android:inputType="numberDecimal|number"
         app:layout_constraintBottom_toTopOf="@+id/editText_category"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
