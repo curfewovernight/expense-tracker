@@ -3,12 +3,17 @@ package com.example.expensetracker;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+
+import com.google.android.material.appbar.CollapsingToolbarLayout;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -57,6 +62,7 @@ public class ExpensesFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -65,16 +71,28 @@ public class ExpensesFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_expenses, container, false);
 
-        btnOpenAddExpenses = view.findViewById(R.id.btn_open_add_expense);
-        btnOpenAddExpenses.setOnClickListener(new View.OnClickListener() {
+        // collapsing toolbar typeface
+        CollapsingToolbarLayout expenseCollapsingToolbar = view.findViewById(R.id.collapsing_toolbar);
+        expenseCollapsingToolbar.setExpandedTitleTextAppearance(R.style.ExpandedAppBar);
+        expenseCollapsingToolbar.setCollapsedTitleTextAppearance(R.style.CollapsedAppBar);
+
+        // toolbar add icon
+        Toolbar ExpenseFragmentToolBar = view.findViewById(R.id.toolbar);
+        ExpenseFragmentToolBar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), AddExpenseActivity.class);
-                startActivity(intent);
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.add_expense_action:
+                        Intent intent = new Intent(getActivity(), AddExpenseActivity.class);
+                        startActivity(intent);
+                        // getActivity().overridePendingTransition(R.anim.slide_in_from_right, R.anim.slide_out_to_right);
+                        return true;
+                    default:
+                        return false;
+                }
             }
         });
 
-        // Inflate the layout for this fragment
         return view;
     }
 }

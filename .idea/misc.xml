@@ -10,9 +10,20 @@
         <entry key="..\:/Users/Shubham Mhashelkar/AndroidStudioProjects/ExpenseTracker/app/src/main/res/layout/fragment_money_source.xml" value="0.259375" />
         <entry key="..\:/Users/Shubham Mhashelkar/AndroidStudioProjects/ExpenseTracker/app/src/main/res/layout/fragment_settings.xml" value="0.259375" />
         <entry key="..\:/Users/Shubham Mhashelkar/AndroidStudioProjects/ExpenseTracker/app/src/main/res/menu/bottom_nav.xml" value="0.259375" />
+        <entry key="..\:/Users/Shubham Mhashelkar/StudioProjects/expense-tracker/app/src/main/res/drawable/ic_baseline_add_24.xml" value="0.2703125" />
+        <entry key="..\:/Users/Shubham Mhashelkar/StudioProjects/expense-tracker/app/src/main/res/drawable/ic_baseline_monetization_on_24.xml" value="0.2703125" />
+        <entry key="..\:/Users/Shubham Mhashelkar/StudioProjects/expense-tracker/app/src/main/res/drawable/ic_baseline_settings_24.xml" value="0.2703125" />
+        <entry key="..\:/Users/Shubham Mhashelkar/StudioProjects/expense-tracker/app/src/main/res/font-v26/fr_inter_bold.xml" value="0.284375" />
+        <entry key="..\:/Users/Shubham Mhashelkar/StudioProjects/expense-tracker/app/src/main/res/font/fr_inter_bold.xml" value="0.284375" />
+        <entry key="..\:/Users/Shubham Mhashelkar/StudioProjects/expense-tracker/app/src/main/res/font/inter.xml" value="0.284375" />
         <entry key="..\:/Users/Shubham Mhashelkar/StudioProjects/expense-tracker/app/src/main/res/layout/activity_add_expense.xml" value="0.25416666666666665" />
-        <entry key="..\:/Users/Shubham Mhashelkar/StudioProjects/expense-tracker/app/src/main/res/layout/fragment_expenses.xml" value="0.264" />
+        <entry key="..\:/Users/Shubham Mhashelkar/StudioProjects/expense-tracker/app/src/main/res/layout/activity_main.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Shubham Mhashelkar/StudioProjects/expense-tracker/app/src/main/res/layout/fragment_expenses.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Shubham Mhashelkar/StudioProjects/expense-tracker/app/src/main/res/layout/fragment_expenses1.xml" value="0.1" />
         <entry key="..\:/Users/Shubham Mhashelkar/StudioProjects/expense-tracker/app/src/main/res/layout/fragment_home.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Shubham Mhashelkar/StudioProjects/expense-tracker/app/src/main/res/layout/idk.xml" value="0.264" />
+        <entry key="..\:/Users/Shubham Mhashelkar/StudioProjects/expense-tracker/app/src/main/res/menu/bottom_nav.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Shubham Mhashelkar/StudioProjects/expense-tracker/app/src/main/res/menu/expenses_fragment_menu.xml" value="0.25416666666666665" />
       </map>
     </option>
   </component>
@@ -21,5 +32,12 @@
   </component>
   <component name="ProjectType">
     <option name="id" value="Android" />
+  </component>
+  <component name="VisualizationToolProject">
+    <option name="state">
+      <ProjectState>
+        <option name="scale" value="0.25416666666666665" />
+      </ProjectState>
+    </option>
   </component>
 </project>

@@ -92,6 +92,9 @@ public class AddExpenseActivity extends AppCompatActivity {
                 boolean success = dataBaseHelper.addOne(expensesModel);
 
                 Toast.makeText(AddExpenseActivity.this, "Successful?" + success, Toast.LENGTH_SHORT);
+
+                // close this activity
+                // finish();
             }
         });
     }

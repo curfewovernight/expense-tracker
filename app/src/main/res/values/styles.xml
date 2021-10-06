@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="ExpandedAppBar" parent="@android:style/TextAppearance.Medium">
+        <item name="fontFamily">@font/inter_bold</item>
+        <item name="android:textSize">34sp</item>
+        <item name="android:textColor">#000</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="CollapsedAppBar" parent="@android:style/TextAppearance.Medium">
+        <item name="fontFamily">@font/inter_bold</item>
+        <item name="android:textSize">17sp</item>
+        <item name="android:textColor">#000</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Divider">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:background">#D1D1D4</item>
+    </style>
+</resources>
