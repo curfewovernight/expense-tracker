@@ -1,10 +1,14 @@
 package com.example.expensetracker;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -13,6 +17,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.google.android.material.appbar.CollapsingToolbarLayout;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -23,6 +30,9 @@ import com.google.android.material.appbar.CollapsingToolbarLayout;
 public class ExpensesFragment extends Fragment {
 
     Button btnOpenAddExpenses;
+    RecyclerView recyclerView;
+    DataBaseHelper dataBaseHelper;
+    ExpensesAdapter adapter;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -65,6 +75,7 @@ public class ExpensesFragment extends Fragment {
         setHasOptionsMenu(true);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -92,6 +103,14 @@ public class ExpensesFragment extends Fragment {
                 }
             }
         });
+
+        dataBaseHelper = new DataBaseHelper(getActivity());
+
+        adapter = new ExpensesAdapter(dataBaseHelper.getEveryone());
+
+        recyclerView = view.findViewById(R.id.expense_recycler);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         return view;
     }

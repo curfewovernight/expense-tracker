@@ -32,7 +32,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     // Called first time u try to access database. Should have code to create database
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        String createTableStatement = "CREATE TABLE " + EXPENSES_TABLE + " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_EXPENSE_AMOUNT + " REAL, " + COLUMN_EXPENSE_CAT + " TEXT, " + COLUMN_WALLET_CAT + " TEXT, " + COLUMN_DATE_OF_EXPENSE + " TEXT)";
+        String createTableStatement = "CREATE TABLE IF NOT EXISTS " + EXPENSES_TABLE + " (" + COLUMN_ID + " INTEGER PRIMARY KEY, " + COLUMN_EXPENSE_AMOUNT + " REAL, " + COLUMN_EXPENSE_CAT + " TEXT, " + COLUMN_WALLET_CAT + " TEXT, " + COLUMN_DATE_OF_EXPENSE + " TEXT)";
 
         sqLiteDatabase.execSQL(createTableStatement);
     }
@@ -43,7 +43,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     public boolean addOne(ExpensesModel expensesModel) {
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -69,9 +68,26 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    public boolean deleteOne(ExpensesModel expensesModel) {
+        // find expense model in database, if found delete it and return true
+        // if not found return false
+
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        String query = "DELETE FROM " + EXPENSES_TABLE + " WHERE" + COLUMN_ID + " = " + expensesModel.getId();
+
+        Cursor cursor = sqLiteDatabase.rawQuery(query, null);
+
+        if (cursor.moveToFirst()) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public List<ExpensesModel> getEveryone() {
-        List<ExpensesModel> returnList = new ArrayList<>();
+    public ArrayList<ExpensesModel> getEveryone() {
+        ArrayList<ExpensesModel> returnList = new ArrayList<>();
 
         // get data from database
         String queryString = "SELECT * FROM " + EXPENSES_TABLE;
@@ -89,7 +105,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 String walletCategory = cursor.getString(3);
                 String dateOfExpense = cursor.getString(4);
 
-                LocalDate localDate = LocalDate.parse(dateOfExpense);
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuuu-MM-dd'T'HH:mm:ssX");
+
+                LocalDate localDate = LocalDate.parse(dateOfExpense, dtf);
 
                 ExpensesModel newModel = new ExpensesModel(expenseID, expenseAmount, expenseCategory, walletCategory, localDate);
 

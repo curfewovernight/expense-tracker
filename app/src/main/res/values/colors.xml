@@ -8,5 +8,6 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="collapsing_toolbar">#F9F9F9</color>
-    <color name="blu">#007AFF</color>
+    <color name="accent_colour">#007AFF</color>
+    <color name="list_background">#F2F2F6</color>
 </resources>
