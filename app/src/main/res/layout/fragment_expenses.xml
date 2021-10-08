@@ -38,18 +38,21 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <View
+        android:id="@+id/toolbarDivider"
         style="@style/Divider"
         app:layout_anchor="@id/appbar"
         app:layout_anchorGravity="bottom"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/expense_recycler"
+        android:paddingVertical="48dp"
+        android:clipToPadding="false"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:overScrollMode="never"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
-    </androidx.recyclerview.widget.RecyclerView>
 
+    </androidx.recyclerview.widget.RecyclerView>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

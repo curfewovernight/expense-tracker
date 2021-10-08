@@ -90,7 +90,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         ArrayList<ExpensesModel> returnList = new ArrayList<>();
 
         // get data from database
-        String queryString = "SELECT * FROM " + EXPENSES_TABLE;
+        String queryString = "SELECT * FROM " + EXPENSES_TABLE + " ORDER BY " + COLUMN_ID + " DESC ";
 
         SQLiteDatabase db = this.getReadableDatabase();
 

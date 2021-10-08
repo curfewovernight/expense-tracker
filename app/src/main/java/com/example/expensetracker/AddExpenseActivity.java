@@ -4,6 +4,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -34,10 +35,9 @@ public class AddExpenseActivity extends AppCompatActivity {
     TextView textView_date;
     LocalDateTime localDateTime;
     LocalDate localDate = LocalDate.now();
-
-    // new views
     Toolbar toolbar;
     View view_date;
+    View discard_view;
     ExpensesModel expensesModel;
 
     @Override
@@ -50,6 +50,16 @@ public class AddExpenseActivity extends AppCompatActivity {
         editText_Wallet = findViewById(R.id.editText_Wallet);
         textView_date = findViewById(R.id.textView_date);
         view_date = findViewById(R.id.view_date);
+        discard_view = findViewById(R.id.expense_discard);
+
+
+        // discard expense entry setup
+        discard_view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
 
         // toolbar
         toolbar = findViewById(R.id.add_expense_toolbar);
@@ -71,6 +81,7 @@ public class AddExpenseActivity extends AppCompatActivity {
         view_date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                view_date.setEnabled(false);
                 materialDatePicker.show(getSupportFragmentManager(), "DATE_PICKER");
             }
         });
@@ -86,6 +97,13 @@ public class AddExpenseActivity extends AppCompatActivity {
 
 
                 textView_date.setText(formattedString);
+            }
+        });
+
+        materialDatePicker.addOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+                view_date.setEnabled(true);
             }
         });
 

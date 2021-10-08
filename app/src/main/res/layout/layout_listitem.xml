@@ -10,6 +10,7 @@
     <View
         android:id="@+id/list_divider"
         style="@style/Divider"
+        android:layout_height="1dp"
         app:layout_constraintBottom_toTopOf="@+id/view"
         app:layout_constraintEnd_toEndOf="@id/view"
         app:layout_constraintStart_toStartOf="@id/view"
@@ -72,4 +73,5 @@
         app:layout_constraintBottom_toBottomOf="@+id/expenses_frag_list_amount"
         app:layout_constraintEnd_toStartOf="@+id/expenses_frag_list_amount"
         app:layout_constraintTop_toTopOf="@+id/expenses_frag_list_amount" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
