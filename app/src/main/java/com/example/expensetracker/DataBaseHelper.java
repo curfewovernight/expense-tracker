@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Build;
+import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -68,24 +70,48 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    public boolean deleteOne(ExpensesModel expensesModel) {
+    public boolean updateOne(ExpensesModel expensesModel) {
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+
+        // convert localdate to ISO 8601 and string
+        LocalDate localDate = expensesModel.getDateOfExpense();
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuuu-MM-dd'T'HH:mm:ssX");
+
+        String date = localDate.atStartOfDay().atOffset(ZoneOffset.UTC).format(dtf);
+
+        contentValues.put(COLUMN_EXPENSE_AMOUNT, expensesModel.getAmount());
+        contentValues.put(COLUMN_EXPENSE_CAT, expensesModel.getExpenseCategory());
+        contentValues.put(COLUMN_WALLET_CAT, expensesModel.getWalletCategory());
+        contentValues.put(COLUMN_DATE_OF_EXPENSE, date);
+
+        String id = String.valueOf(expensesModel.getId());
+
+        int insert = sqLiteDatabase.update(EXPENSES_TABLE, contentValues, COLUMN_ID + " = " + id, null);
+
+        if (insert != 1) {
+            return false;
+        }
+        else {
+            Log.d("TAG", "Number of rows affected: " + String.valueOf(insert));
+            return true;
+        }
+    }
+
+    // NOT IMPLEMENT YET
+    public boolean deleteOne(int expensesID) {
         // find expense model in database, if found delete it and return true
         // if not found return false
 
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-        String query = "DELETE FROM " + EXPENSES_TABLE + " WHERE" + COLUMN_ID + " = " + expensesModel.getId();
+        String id = String.valueOf(expensesID);
 
-        Cursor cursor = sqLiteDatabase.rawQuery(query, null);
+        int delete = sqLiteDatabase.delete(EXPENSES_TABLE, COLUMN_ID + " = " + id, null);
 
-        if (cursor.moveToFirst()) {
-            return true;
-        }
-        else {
-            return false;
-        }
+        Log.d("TAG", "No. of rows deleted (should not be anything but 1): " + String.valueOf(delete));
+        return true;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     public ArrayList<ExpensesModel> getEveryone() {
         ArrayList<ExpensesModel> returnList = new ArrayList<>();
 
@@ -122,6 +148,38 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         // close both cursor and the database when done.
         cursor.close();
         db.close();
+
+        return returnList;
+    }
+
+    public ArrayList<ExpensesModel> getOne(int expensesModel) {
+        ArrayList<ExpensesModel> returnList = new ArrayList<>();
+
+        SQLiteDatabase database = this.getReadableDatabase();
+
+        // get data from database
+        String queryString = "SELECT * FROM " + EXPENSES_TABLE + " WHERE " + COLUMN_ID + " = " + expensesModel;
+
+        Cursor cursor = database.rawQuery(queryString, null);
+
+        if (cursor.moveToFirst()) {
+            int expenseID = cursor.getInt(0);
+            Float expenseAmount = cursor.getFloat(1);
+            String expenseCategory = cursor.getString(2);
+            String walletCategory = cursor.getString(3);
+            String dateOfExpense = cursor.getString(4);
+
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuuu-MM-dd'T'HH:mm:ssX");
+
+            LocalDate localDate = LocalDate.parse(dateOfExpense, dtf);
+
+            ExpensesModel newModel = new ExpensesModel(expenseID, expenseAmount, expenseCategory, walletCategory, localDate);
+
+            returnList.add(newModel);
+        }
+        else {
+            // pass empty list and make toast in fragment
+        }
 
         return returnList;
     }

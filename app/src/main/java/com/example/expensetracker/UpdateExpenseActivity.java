@@ -1,10 +1,7 @@
 package com.example.expensetracker;
 
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,6 +13,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
@@ -25,8 +26,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 
-public class AddExpenseActivity extends AppCompatActivity {
+public class UpdateExpenseActivity extends AppCompatActivity {
 
     // references to edit texts and other fields in layout
     EditText editText_Amount;
@@ -34,26 +36,28 @@ public class AddExpenseActivity extends AppCompatActivity {
     EditText editText_Wallet;
     TextView textView_date;
     LocalDateTime localDateTime;
-    LocalDate localDate = LocalDate.now();
+    LocalDate localDate;
     Toolbar toolbar;
     View view_date;
     View discard_view;
+    View delete_view;
     ExpensesModel expensesModel;
+    int ExpenseID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_expense);
+        setContentView(R.layout.activity_update_expense);
 
-        editText_Amount = findViewById(R.id.editText_Amount);
-        editText_Category = findViewById(R.id.editText_Category);
-        editText_Wallet = findViewById(R.id.editText_Wallet);
-        textView_date = findViewById(R.id.textView_date);
-        view_date = findViewById(R.id.view_date);
+        editText_Amount = findViewById(R.id.editText_Amount_Update);
+        editText_Category = findViewById(R.id.editText_Category_Update);
+        editText_Wallet = findViewById(R.id.editText_Wallet_Update);
+        textView_date = findViewById(R.id.textView_date_Update);
+        view_date = findViewById(R.id.view_date_Update);
         discard_view = findViewById(R.id.expense_discard);
+        delete_view = findViewById(R.id.expense_delete);
 
-
-        // discard expense entry setup
+        // discard expense edits button
         discard_view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -61,18 +65,45 @@ public class AddExpenseActivity extends AppCompatActivity {
             }
         });
 
-        // toolbar
-        toolbar = findViewById(R.id.add_expense_toolbar);
+        // delete expense entry (row) button
+        delete_view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DataBaseHelper dataBaseHelper = new DataBaseHelper(UpdateExpenseActivity.this);
+
+                boolean success = dataBaseHelper.deleteOne(ExpenseID);
+                finish();
+            }
+        });
+
+        // get expense id
+        Intent intent = getIntent();
+        ExpenseID = intent.getIntExtra("expenseID", 0);
+        Log.d("TAG", "getIntExtra: " + String.valueOf(ExpenseID));
+
+        // get the expense details (array list) for that one item
+        DataBaseHelper dataBaseHelper = new  DataBaseHelper(this);
+        ArrayList<ExpensesModel> oneExpense = dataBaseHelper.getOne(ExpenseID);
+
+        // set all edit texts and date to selected expense's details
+        editText_Amount.setText(String.valueOf(oneExpense.get(0).getAmount()));
+        editText_Category.setText(String.valueOf(oneExpense.get(0).getExpenseCategory()));
+        editText_Wallet.setText(String.valueOf(oneExpense.get(0).getWalletCategory()));
+        localDate = oneExpense.get(0).getDateOfExpense();
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd LLLL, yyyy");
+        String formattedString = localDate.format(formatter);
+        textView_date.setText(formattedString);
 
         // collapsing toolbar typeface
         CollapsingToolbarLayout addExpenseCollapsingBar = findViewById(R.id.add_expense_collapsing_bar);
         addExpenseCollapsingBar.setExpandedTitleTextAppearance(R.style.ExpandedAppBar);
         addExpenseCollapsingBar.setCollapsedTitleTextAppearance(R.style.CollapsedAppBar);
 
-        // set textView_date to today's date by default
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd LLLL, yyyy");
-        String formattedString = localDate.format(formatter);
-        textView_date.setText(formattedString);
+//        // set textView_date to today's date by default
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd LLLL, yyyy");
+//        String formattedString = localDate.format(formatter);
+//        textView_date.setText(formattedString);
 
         // material date picker
         MaterialDatePicker.Builder builder = MaterialDatePicker.Builder.datePicker();
@@ -87,7 +118,6 @@ public class AddExpenseActivity extends AppCompatActivity {
         });
 
         materialDatePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<Long>() {
-            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onPositiveButtonClick(Long selection) {
                 localDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(selection), ZoneId.systemDefault());
@@ -107,27 +137,29 @@ public class AddExpenseActivity extends AppCompatActivity {
             }
         });
 
+        // toolbar
+        toolbar = findViewById(R.id.update_expense_toolbar);
         setSupportActionBar(toolbar);
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
 
                 switch (item.getItemId()) {
-                    case R.id.menu_add_expense:
+                    case R.id.menu_update_expense:
 
                         try {
                             float amount = Float.parseFloat(String.valueOf(editText_Amount.getText()));
-                            expensesModel = new ExpensesModel(-1, amount, editText_Category.getText().toString(), editText_Wallet.getText().toString(), localDate);
-                            Toast.makeText(AddExpenseActivity.this, String.valueOf(expensesModel), Toast.LENGTH_SHORT).show();
+                            expensesModel = new ExpensesModel(oneExpense.get(0).getId(), amount, editText_Category.getText().toString(), editText_Wallet.getText().toString(), localDate);
+                            //Toast.makeText(UpdateExpenseActivity.this, String.valueOf(expensesModel), Toast.LENGTH_SHORT).show();
                         }
                         catch (Exception e) {
-                            // Toast.makeText(AddExpenseActivity.this, String.valueOf(e), Toast.LENGTH_SHORT).show();
-                            expensesModel = new ExpensesModel(-1, 0, "ERROR", "ERROR", localDate);
+                            Toast.makeText(UpdateExpenseActivity.this, String.valueOf(e) + ": Update failed", Toast.LENGTH_SHORT).show();
+                            //expensesModel = new ExpensesModel(-1, 0, "ERROR", "ERROR", localDate);
                         }
 
-                        DataBaseHelper dataBaseHelper = new DataBaseHelper(AddExpenseActivity.this);
+                        DataBaseHelper dataBaseHelper = new DataBaseHelper(UpdateExpenseActivity.this);
 
-                        boolean success = dataBaseHelper.addOne(expensesModel);
+                        boolean success = dataBaseHelper.updateOne(expensesModel);
 
                         Log.d("TAG", String.valueOf(success));
 
@@ -144,7 +176,7 @@ public class AddExpenseActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.add_expenses_menu, menu);
+        inflater.inflate(R.menu.update_expenses_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
 }

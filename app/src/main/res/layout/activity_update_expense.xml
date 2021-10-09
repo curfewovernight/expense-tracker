@@ -23,15 +23,15 @@
             app:expandedTitleMarginBottom="20dp"
             app:expandedTitleMarginStart="16dp"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            app:title="Add Expense">
+            app:title="Edit Expense">
 
             <androidx.appcompat.widget.Toolbar
-                android:id="@+id/add_expense_toolbar"
+                android:id="@+id/update_expense_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:paddingStart="64dp"
                 app:layout_collapseMode="pin"
-                app:menu="@menu/add_expenses_menu" />
+                app:menu="@menu/update_expenses_menu" />
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
@@ -78,7 +78,7 @@
             app:layout_constraintTop_toBottomOf="@+id/view5" />
 
         <EditText
-            android:id="@+id/editText_Amount"
+            android:id="@+id/editText_Amount_Update"
             android:layout_width="0dp"
             android:layout_height="48dp"
             android:layout_marginStart="16dp"
@@ -122,7 +122,7 @@
             app:layout_constraintTop_toTopOf="@+id/view3" />
 
         <EditText
-            android:id="@+id/editText_Category"
+            android:id="@+id/editText_Category_Update"
             android:layout_width="0dp"
             android:layout_height="48dp"
             android:layout_marginStart="16dp"
@@ -173,7 +173,7 @@
             app:layout_constraintTop_toTopOf="@+id/view7" />
 
         <EditText
-            android:id="@+id/editText_Wallet"
+            android:id="@+id/editText_Wallet_Update"
             android:layout_width="0dp"
             android:layout_height="48dp"
             android:layout_marginStart="16dp"
@@ -197,12 +197,12 @@
         <View
             android:id="@+id/view12"
             style="@style/Divider"
-            app:layout_constraintBottom_toTopOf="@+id/view_date"
+            app:layout_constraintBottom_toTopOf="@+id/view_date_Update"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
         <View
-            android:id="@+id/view_date"
+            android:id="@+id/view_date_Update"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_marginTop="48dp"
@@ -219,12 +219,12 @@
             android:text="Date"
             android:layout_marginStart="16dp"
             android:textAppearance="@style/ListViewPrimary"
-            app:layout_constraintBottom_toBottomOf="@+id/view_date"
-            app:layout_constraintStart_toStartOf="@id/view_date"
-            app:layout_constraintTop_toTopOf="@+id/view_date" />
+            app:layout_constraintBottom_toBottomOf="@+id/view_date_Update"
+            app:layout_constraintStart_toStartOf="@id/view_date_Update"
+            app:layout_constraintTop_toTopOf="@+id/view_date_Update" />
 
         <TextView
-            android:id="@+id/textView_date"
+            android:id="@+id/textView_date_Update"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -232,17 +232,17 @@
             android:hint="October 7, 2021"
             android:textAppearance="@style/ListViewPrimary"
             android:textSize="17sp"
-            app:layout_constraintBottom_toBottomOf="@id/view_date"
-            app:layout_constraintEnd_toEndOf="@+id/view_date"
+            app:layout_constraintBottom_toBottomOf="@id/view_date_Update"
+            app:layout_constraintEnd_toEndOf="@+id/view_date_Update"
             app:layout_constraintStart_toEndOf="@id/barrier2"
-            app:layout_constraintTop_toTopOf="@+id/view_date" />
+            app:layout_constraintTop_toTopOf="@+id/view_date_Update" />
 
         <View
             android:id="@+id/view13"
             style="@style/Divider"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/view_date" />
+            app:layout_constraintTop_toBottomOf="@+id/view_date_Update" />
 
         <View
             style="@style/Divider"
@@ -264,7 +264,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Discard Entry"
+            android:text="Discard Changes"
             android:textColor="#FF3B30"
             android:layout_marginStart="16dp"
             android:textAppearance="@style/ListViewPrimary"
@@ -273,10 +273,45 @@
             app:layout_constraintTop_toTopOf="@+id/expense_discard" />
 
         <View
+            android:id="@+id/discard_bottom_divider"
             style="@style/Divider"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/expense_discard" />
+
+        <View
+            style="@style/Divider"
+            app:layout_constraintBottom_toTopOf="@+id/expense_delete"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <View
+            android:id="@+id/expense_delete"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="48dp"
+            android:background="@color/white"
+            android:foreground="?attr/selectableItemBackground"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/discard_bottom_divider" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Delete"
+            android:textColor="#FF3B30"
+            android:layout_marginStart="16dp"
+            android:textAppearance="@style/ListViewPrimary"
+            app:layout_constraintBottom_toBottomOf="@+id/expense_delete"
+            app:layout_constraintStart_toStartOf="@id/expense_delete"
+            app:layout_constraintTop_toTopOf="@+id/expense_delete" />
+
+        <View
+            style="@style/Divider"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/expense_delete" />
 
         <androidx.constraintlayout.widget.Barrier
             android:id="@+id/barrier2"

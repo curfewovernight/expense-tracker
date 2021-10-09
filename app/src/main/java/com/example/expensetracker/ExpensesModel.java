@@ -21,6 +21,7 @@ public class ExpensesModel {
     }
 
     public ExpensesModel() {
+
     }
 
     // toString is necessary for printing contents of class object

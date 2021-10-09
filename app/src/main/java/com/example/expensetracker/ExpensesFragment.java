@@ -1,9 +1,14 @@
 package com.example.expensetracker;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
@@ -14,12 +19,10 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 
 import java.util.ArrayList;
-import java.util.List;
 
 
 /**
@@ -27,12 +30,12 @@ import java.util.List;
  * Use the {@link ExpensesFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ExpensesFragment extends Fragment {
+public class ExpensesFragment extends Fragment implements ExpensesAdapter.OnExpenseListener {
 
-    Button btnOpenAddExpenses;
     RecyclerView recyclerView;
     DataBaseHelper dataBaseHelper;
     ExpensesAdapter adapter;
+    View view;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -42,6 +45,7 @@ public class ExpensesFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private ArrayList<ExpensesModel> mExpenses;
 
     public ExpensesFragment() {
         // Required empty public constructor
@@ -73,14 +77,14 @@ public class ExpensesFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
         setHasOptionsMenu(true);
+
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_expenses, container, false);
+        view = inflater.inflate(R.layout.fragment_expenses, container, false);
 
         // collapsing toolbar typeface
         CollapsingToolbarLayout expenseCollapsingToolbar = view.findViewById(R.id.collapsing_toolbar);
@@ -104,14 +108,45 @@ public class ExpensesFragment extends Fragment {
             }
         });
 
+        updateRecyclerView(view);
+
+
+
+        return view;
+    }
+
+    public void updateRecyclerView(View view) {
         dataBaseHelper = new DataBaseHelper(getActivity());
 
-        adapter = new ExpensesAdapter(dataBaseHelper.getEveryone());
+        mExpenses = dataBaseHelper.getEveryone();
+
+        adapter = new ExpensesAdapter(mExpenses, this);
 
         recyclerView = view.findViewById(R.id.expense_recycler);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+    }
 
-        return view;
+    ActivityResultLauncher<Intent> addActivityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        // initialize result data
+                        Intent data = result.getData();
+                        if (data != null) {
+                            
+                        }
+                    }
+                }
+            }
+    );
+
+    @Override
+    public void onExpenseClick(int expenseItemID) {
+        Intent intent = new Intent(getActivity(), UpdateExpenseActivity.class);
+        intent.putExtra("expenseID", expenseItemID);
+        addActivityResultLauncher.launch(intent);
     }
 }

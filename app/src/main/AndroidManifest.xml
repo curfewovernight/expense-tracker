@@ -13,6 +13,9 @@
             android:name=".AddExpenseActivity"
             android:exported="true" />
         <activity
+            android:name=".UpdateExpenseActivity"
+            android:exported="true" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
