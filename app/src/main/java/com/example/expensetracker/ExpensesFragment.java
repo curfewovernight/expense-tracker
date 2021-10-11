@@ -1,5 +1,7 @@
 package com.example.expensetracker;
 
+import static android.app.Activity.RESULT_OK;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
@@ -99,7 +101,8 @@ public class ExpensesFragment extends Fragment implements ExpensesAdapter.OnExpe
                 switch (item.getItemId()) {
                     case R.id.add_expense_action:
                         Intent intent = new Intent(getActivity(), AddExpenseActivity.class);
-                        startActivity(intent);
+                        // startActivity(intent);
+                        addActivityResultLauncher.launch(intent);
                         // getActivity().overridePendingTransition(R.anim.slide_in_from_right, R.anim.slide_out_to_right);
                         return true;
                     default:
@@ -132,11 +135,9 @@ public class ExpensesFragment extends Fragment implements ExpensesAdapter.OnExpe
             new ActivityResultCallback<ActivityResult>() {
                 @Override
                 public void onActivityResult(ActivityResult result) {
-                    if (result.getResultCode() == Activity.RESULT_OK) {
-                        // initialize result data
-                        Intent data = result.getData();
-                        if (data != null) {
-                            
+                    if (result != null && result.getResultCode() == RESULT_OK) {
+                        if (result.getData() != null && result.getData().getStringExtra(UpdateExpenseActivity.KEY_NAME) != null) {
+                            updateRecyclerView(view);
                         }
                     }
                 }

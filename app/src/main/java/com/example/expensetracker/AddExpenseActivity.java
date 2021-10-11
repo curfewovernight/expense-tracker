@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -28,6 +29,7 @@ import java.time.format.DateTimeFormatter;
 
 public class AddExpenseActivity extends AppCompatActivity {
 
+    public static final String KEY_NAME = "NAME";
     // references to edit texts and other fields in layout
     EditText editText_Amount;
     EditText editText_Category;
@@ -130,6 +132,11 @@ public class AddExpenseActivity extends AppCompatActivity {
                         boolean success = dataBaseHelper.addOne(expensesModel);
 
                         Log.d("TAG", String.valueOf(success));
+
+                        // update recyclerview
+                        Intent intent = new Intent();
+                        intent.putExtra(KEY_NAME, "IDK");
+                        setResult(RESULT_OK, intent);
 
                         finish();
                         return true;

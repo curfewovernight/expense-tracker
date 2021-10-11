@@ -30,6 +30,7 @@ import java.util.ArrayList;
 
 public class UpdateExpenseActivity extends AppCompatActivity {
 
+    public static final String KEY_NAME = "NAME";
     // references to edit texts and other fields in layout
     EditText editText_Amount;
     EditText editText_Category;
@@ -162,6 +163,11 @@ public class UpdateExpenseActivity extends AppCompatActivity {
                         boolean success = dataBaseHelper.updateOne(expensesModel);
 
                         Log.d("TAG", String.valueOf(success));
+
+                        // update recyclerview
+                        Intent intent = new Intent();
+                        intent.putExtra(KEY_NAME, "IDK");
+                        setResult(RESULT_OK, intent);
 
                         finish();
                         return true;
