@@ -73,6 +73,12 @@ public class UpdateExpenseActivity extends AppCompatActivity {
                 DataBaseHelper dataBaseHelper = new DataBaseHelper(UpdateExpenseActivity.this);
 
                 boolean success = dataBaseHelper.deleteOne(ExpenseID);
+
+                // update recyclerview
+                Intent intent = new Intent();
+                intent.putExtra(KEY_NAME, "IDK");
+                setResult(RESULT_OK, intent);
+
                 finish();
             }
         });

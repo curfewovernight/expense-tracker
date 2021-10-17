@@ -113,8 +113,6 @@ public class ExpensesFragment extends Fragment implements ExpensesAdapter.OnExpe
 
         updateRecyclerView(view);
 
-
-
         return view;
     }
 
