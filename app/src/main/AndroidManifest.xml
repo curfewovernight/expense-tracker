@@ -13,7 +13,13 @@
             android:name=".AddExpenseActivity"
             android:exported="true" />
         <activity
+            android:name=".AddWalletActivity"
+            android:exported="true" />
+        <activity
             android:name=".UpdateExpenseActivity"
+            android:exported="true" />
+        <activity
+            android:name=".UpdateWalletActivity"
             android:exported="true" />
         <activity
             android:name=".MainActivity"

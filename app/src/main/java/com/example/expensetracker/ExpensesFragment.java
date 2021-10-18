@@ -38,6 +38,7 @@ public class ExpensesFragment extends Fragment implements ExpensesAdapter.OnExpe
     DataBaseHelper dataBaseHelper;
     ExpensesAdapter adapter;
     View view;
+    private ArrayList<ExpensesModel> mExpenses;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -47,7 +48,6 @@ public class ExpensesFragment extends Fragment implements ExpensesAdapter.OnExpe
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    private ArrayList<ExpensesModel> mExpenses;
 
     public ExpensesFragment() {
         // Required empty public constructor
@@ -78,8 +78,8 @@ public class ExpensesFragment extends Fragment implements ExpensesAdapter.OnExpe
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-        setHasOptionsMenu(true);
 
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -101,7 +101,6 @@ public class ExpensesFragment extends Fragment implements ExpensesAdapter.OnExpe
                 switch (item.getItemId()) {
                     case R.id.add_expense_action:
                         Intent intent = new Intent(getActivity(), AddExpenseActivity.class);
-                        // startActivity(intent);
                         addActivityResultLauncher.launch(intent);
                         // getActivity().overridePendingTransition(R.anim.slide_in_from_right, R.anim.slide_out_to_right);
                         return true;

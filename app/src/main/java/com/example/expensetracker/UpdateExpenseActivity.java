@@ -4,16 +4,19 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -154,28 +157,89 @@ public class UpdateExpenseActivity extends AppCompatActivity {
                 switch (item.getItemId()) {
                     case R.id.menu_update_expense:
 
-                        try {
-                            float amount = Float.parseFloat(String.valueOf(editText_Amount.getText()));
-                            expensesModel = new ExpensesModel(oneExpense.get(0).getId(), amount, editText_Category.getText().toString(), editText_Wallet.getText().toString(), localDate);
-                            //Toast.makeText(UpdateExpenseActivity.this, String.valueOf(expensesModel), Toast.LENGTH_SHORT).show();
+                        String Amount = editText_Amount.getText().toString().trim();
+                        String eCategory = editText_Category.getText().toString().trim();
+                        String wCategory = editText_Wallet.getText().toString().trim();
+
+                        if (TextUtils.isEmpty(Amount)) {
+                            // perform if edittext is empty
+                            AlertDialog.Builder builder = new AlertDialog.Builder(UpdateExpenseActivity.this);
+                            builder.setMessage("Please Enter Amount")
+                                    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            editText_Amount.requestFocus();
+
+                                            InputMethodManager imm = (InputMethodManager) getSystemService(UpdateExpenseActivity.this.INPUT_METHOD_SERVICE);
+                                            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+                                        }
+                                    }).setCancelable(false);
+
+                            AlertDialog alertDialog = builder.create();
+                            alertDialog.show();
                         }
-                        catch (Exception e) {
-                            Toast.makeText(UpdateExpenseActivity.this, String.valueOf(e) + ": Update failed", Toast.LENGTH_SHORT).show();
-                            //expensesModel = new ExpensesModel(-1, 0, "ERROR", "ERROR", localDate);
+
+                        else if (TextUtils.isEmpty(eCategory)) {
+                            // perform if edittext is empty
+                            AlertDialog.Builder builder = new AlertDialog.Builder(UpdateExpenseActivity.this);
+                            builder.setMessage("Please Enter Expense Category")
+                                    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            editText_Category.requestFocus();
+
+                                            InputMethodManager imm = (InputMethodManager) getSystemService(UpdateExpenseActivity.this.INPUT_METHOD_SERVICE);
+                                            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+                                        }
+                                    }).setCancelable(false);
+
+                            AlertDialog alertDialog = builder.create();
+                            alertDialog.show();
                         }
 
-                        DataBaseHelper dataBaseHelper = new DataBaseHelper(UpdateExpenseActivity.this);
+                        else if (TextUtils.isEmpty(wCategory)) {
+                            // perform if edittext is empty
+                            AlertDialog.Builder builder = new AlertDialog.Builder(UpdateExpenseActivity.this);
+                            builder.setMessage("Please Enter Account Category")
+                                    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            editText_Wallet.requestFocus();
 
-                        boolean success = dataBaseHelper.updateOne(expensesModel);
+                                            InputMethodManager imm = (InputMethodManager) getSystemService(UpdateExpenseActivity.this.INPUT_METHOD_SERVICE);
+                                            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+                                        }
+                                    }).setCancelable(false);
 
-                        Log.d("TAG", String.valueOf(success));
+                            AlertDialog alertDialog = builder.create();
+                            alertDialog.show();
+                        }
 
-                        // update recyclerview
-                        Intent intent = new Intent();
-                        intent.putExtra(KEY_NAME, "IDK");
-                        setResult(RESULT_OK, intent);
+                        else {
+                            try {
+                                float amount = Float.parseFloat(Amount);
+                                expensesModel = new ExpensesModel(oneExpense.get(0).getId(), amount, eCategory, wCategory, localDate);
+                                //Toast.makeText(UpdateExpenseActivity.this, String.valueOf(expensesModel), Toast.LENGTH_SHORT).show();
+                            }
+                            catch (Exception e) {
+                                Toast.makeText(UpdateExpenseActivity.this, String.valueOf(e) + ": Update failed", Toast.LENGTH_SHORT).show();
+                                //expensesModel = new ExpensesModel(-1, 0, "ERROR", "ERROR", localDate);
+                            }
 
-                        finish();
+                            DataBaseHelper dataBaseHelper = new DataBaseHelper(UpdateExpenseActivity.this);
+
+                            boolean success = dataBaseHelper.updateOne(expensesModel);
+
+                            Log.d("TAG", String.valueOf(success));
+
+                            // update recyclerview
+                            Intent intent = new Intent();
+                            intent.putExtra(KEY_NAME, "IDK");
+                            setResult(RESULT_OK, intent);
+
+                            finish();
+                        }
+
                         return true;
 
                     default:
