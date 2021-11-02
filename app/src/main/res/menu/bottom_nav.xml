@@ -11,7 +11,7 @@
         android:title="Expenses" />
     <item
         android:id="@+id/nav_wallet"
-        android:icon="@drawable/ic_baseline_monetization_on_24"
+        android:icon="@drawable/ic_baseline_account_balance_wallet_24"
         android:title="Account" />
     <item
         android:id="@+id/nav_settings"

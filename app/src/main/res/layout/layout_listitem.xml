@@ -5,12 +5,13 @@
     android:id="@+id/expense_constraint_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:foreground="?android:attr/selectableItemBackground"
     android:background="@color/white">
 
     <View
         android:id="@+id/list_divider"
         style="@style/Divider"
-        android:layout_height="1dp"
+        android:layout_height="0.8dp"
         app:layout_constraintBottom_toTopOf="@+id/view"
         app:layout_constraintEnd_toEndOf="@id/view"
         app:layout_constraintStart_toStartOf="@id/view"
@@ -32,8 +33,7 @@
         android:layout_marginTop="8dp"
         android:text="Food &amp; Beverages"
         android:textAppearance="@style/ListViewPrimary"
-        android:textSize="16sp"
-        android:textStyle="bold"
+        android:textSize="17sp"
         app:layout_constraintStart_toStartOf="@id/view"
         app:layout_constraintTop_toTopOf="@+id/view" />
 
@@ -44,6 +44,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginBottom="8dp"
         android:text="TextView"
+        android:textSize="13sp"
         android:textAppearance="@style/ListViewSecondary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@id/view"
@@ -57,7 +58,7 @@
         android:layout_marginEnd="16dp"
         android:text="99"
         android:textAppearance="@style/ListViewPrimary"
-        android:textSize="20sp"
+        android:textSize="17sp"
         app:layout_constraintBottom_toBottomOf="@+id/view"
         app:layout_constraintEnd_toEndOf="@id/view"
         app:layout_constraintTop_toTopOf="@+id/view" />
@@ -67,9 +68,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="2dp"
-        android:text="$"
+        android:text="@string/symbol"
         android:textAppearance="@style/ListViewPrimary"
-        android:textSize="18sp"
+        android:textSize="15sp"
         app:layout_constraintBottom_toBottomOf="@+id/expenses_frag_list_amount"
         app:layout_constraintEnd_toStartOf="@+id/expenses_frag_list_amount"
         app:layout_constraintTop_toTopOf="@+id/expenses_frag_list_amount" />

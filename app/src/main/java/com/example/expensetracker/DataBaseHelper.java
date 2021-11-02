@@ -12,6 +12,8 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
+import com.github.mikephil.charting.data.Entry;
+
 import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
@@ -170,7 +172,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         ArrayList<ExpensesModel> returnList = new ArrayList<>();
 
         // get data from database
-        String queryString = "SELECT * FROM " + EXPENSES_TABLE + " ORDER BY " + COLUMN_ID + " DESC ";
+        String queryString = "SELECT * FROM " + EXPENSES_TABLE + " ORDER BY " + COLUMN_DATE_OF_EXPENSE + " DESC ";
 
         SQLiteDatabase db = this.getReadableDatabase();
 
@@ -186,7 +188,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 String dateOfExpense = cursor.getString(4);
 
                 DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuuu-MM-dd'T'HH:mm:ssX");
-
                 LocalDate localDate = LocalDate.parse(dateOfExpense, dtf);
 
                 ExpensesModel newModel = new ExpensesModel(expenseID, expenseAmount, expenseCategory, walletCategory, localDate);
@@ -203,6 +204,89 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         cursor.close();
         db.close();
 
+        return returnList;
+    }
+
+    public ArrayList<ExpensesModel> getOutliers() {
+        ArrayList<ExpensesModel> returnList = new ArrayList<>();
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        float average = 0;
+
+        String avgStr = "SELECT AVG(" + COLUMN_EXPENSE_AMOUNT + ") FROM " + EXPENSES_TABLE;
+
+        Cursor avg = db.rawQuery(avgStr, null);
+        if (avg.moveToFirst()) {
+            average = avg.getInt(0);
+            Log.d("TAG", String.valueOf(average));
+        }
+
+        // get data from database
+        String queryString = "SELECT * FROM " + EXPENSES_TABLE + " WHERE " + COLUMN_EXPENSE_AMOUNT + " > " + average + " ORDER BY " + COLUMN_DATE_OF_EXPENSE + " DESC ";
+
+        Cursor cursor = db.rawQuery(queryString,null);
+
+        if (cursor.moveToFirst()) {
+            // loop through the cursor (result set) and create new expense objects. put them in return list
+            do {
+                int expenseID = cursor.getInt(0);
+                Float expenseAmount = cursor.getFloat(1);
+                String expenseCategory = cursor.getString(2);
+                String walletCategory = cursor.getString(3);
+                String dateOfExpense = cursor.getString(4);
+
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuuu-MM-dd'T'HH:mm:ssX");
+                LocalDate localDate = LocalDate.parse(dateOfExpense, dtf);
+
+                ExpensesModel newModel = new ExpensesModel(expenseID, expenseAmount, expenseCategory, walletCategory, localDate);
+
+                returnList.add(newModel);
+            } while (cursor.moveToNext());
+        }
+        else {
+            // failure. do not add anything to list
+        }
+
+        // close both cursor and the database when done.
+        cursor.close();
+        db.close();
+
+        return returnList;
+    }
+
+    public ArrayList<Entry> getChartValues () {
+        ArrayList<Entry> returnList = new ArrayList<>();
+
+        String[] columns = {COLUMN_DATE_OF_EXPENSE, COLUMN_EXPENSE_AMOUNT};
+
+        SQLiteDatabase database = getReadableDatabase();
+
+        String queryString = "SELECT DATE_OF_EXPENSE, EXPENSE_AMOUNT FROM " + EXPENSES_TABLE + " ORDER BY " + COLUMN_DATE_OF_EXPENSE + " ASC ";
+
+        Cursor cursor = database.rawQuery(queryString, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                String dateOfExpense = cursor.getString(0);
+                Float expenseAmount = cursor.getFloat(1);
+
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuuu-MM-dd'T'HH:mm:ssX");
+                LocalDate localDate = LocalDate.parse(dateOfExpense, dtf);
+
+                int day = localDate.getDayOfMonth();
+
+                returnList.add(new Entry(day, expenseAmount));
+
+            } while (cursor.moveToNext());
+        }
+        else {
+            // fail
+        }
+
+        cursor.close();
+        database.close();
+        Log.d("TAG", String.valueOf(returnList));
         return returnList;
     }
 
@@ -236,6 +320,39 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         cursor.close();
         db.close();
 
+        return returnList;
+    }
+
+    // return list string type of all account categories
+    public List<String> getEveryAccountList() {
+        List<String> returnList = new ArrayList<>();
+
+        // get data from database
+        String queryString = "SELECT " + COLUMN_WALLET_CAT + " FROM " + WALLET_TABLE + " ORDER BY " + COLUMN_WALLET_CAT + " ASC ";
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery(queryString,null);
+
+        if (cursor.moveToFirst()) {
+            // loop through the cursor (result set) and create new expense objects. put them in return list
+
+            do {
+                String walletCategory = cursor.getString(0);
+
+                returnList.add(walletCategory);
+                Log.d("TAG", walletCategory);
+            } while (cursor.moveToNext());
+        }
+        else {
+            // failure. do not add anything to list
+        }
+
+        // close both cursor and the database when done.
+        cursor.close();
+        db.close();
+
+        Log.d("TAG", String.valueOf(returnList.size()));
         return returnList;
     }
 
@@ -295,4 +412,23 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
         return returnList;
     }
+
+    public  int getExpenseCount() {
+        int returnInt = 0;
+
+        SQLiteDatabase database = this.getReadableDatabase();
+
+        // get data from database
+        String queryString = "SELECT COUNT(" + COLUMN_ID + ") FROM " + EXPENSES_TABLE;
+
+        Cursor cursor = database.rawQuery(queryString, null);
+
+        if (cursor.moveToFirst()) {
+            returnInt = cursor.getInt(0);
+            Log.d("TAG", String.valueOf(returnInt));
+        }
+
+        return returnInt;
+    }
+
 }

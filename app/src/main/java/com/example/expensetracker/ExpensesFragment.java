@@ -3,7 +3,9 @@ package com.example.expensetracker;
 import static android.app.Activity.RESULT_OK;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -17,10 +19,12 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 
@@ -39,6 +43,12 @@ public class ExpensesFragment extends Fragment implements ExpensesAdapter.OnExpe
     ExpensesAdapter adapter;
     View view;
     private ArrayList<ExpensesModel> mExpenses;
+    public static final String SHARED_PREF = "sharedPrefs";
+    public static final String CURRENCY_PREF = "CURRENCY_PREF";
+    private String loadedCurrency;
+    static final String rupee = "₹ Indian Rupee";
+    static final String usd = "$ United States Dollar";
+    TextView symbolTextView;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -93,6 +103,7 @@ public class ExpensesFragment extends Fragment implements ExpensesAdapter.OnExpe
         expenseCollapsingToolbar.setExpandedTitleTextAppearance(R.style.ExpandedAppBar);
         expenseCollapsingToolbar.setCollapsedTitleTextAppearance(R.style.CollapsedAppBar);
 
+
         // toolbar add icon
         Toolbar ExpenseFragmentToolBar = view.findViewById(R.id.toolbar);
         ExpenseFragmentToolBar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
@@ -115,12 +126,29 @@ public class ExpensesFragment extends Fragment implements ExpensesAdapter.OnExpe
         return view;
     }
 
+    public String loadData() {
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE);
+        loadedCurrency = sharedPreferences.getString(CURRENCY_PREF, "₹");
+        Log.d("TAG", loadedCurrency);
+        if (loadedCurrency.contains("₹")) {
+            return rupee;
+        }
+        else if (loadedCurrency.contains("$")) {
+            return usd;
+        }
+        else {
+            return "error";
+        }
+    }
+
     public void updateRecyclerView(View view) {
         dataBaseHelper = new DataBaseHelper(getActivity());
 
         mExpenses = dataBaseHelper.getEveryone();
 
-        adapter = new ExpensesAdapter(mExpenses, this);
+        loadData();
+
+        adapter = new ExpensesAdapter(mExpenses, this, loadedCurrency);
 
         recyclerView = view.findViewById(R.id.expense_recycler);
         recyclerView.setAdapter(adapter);

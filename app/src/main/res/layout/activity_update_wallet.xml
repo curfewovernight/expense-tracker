@@ -84,8 +84,6 @@
             android:layout_marginStart="16dp"
             android:background="@null"
             android:hint="Account Name"
-            android:inputType="text"
-            android:maxLength="10"
             android:textAppearance="@style/ListViewPrimary"
             android:textSize="17sp"
             app:layout_constraintBottom_toBottomOf="@id/view14"

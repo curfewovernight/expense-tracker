@@ -2,7 +2,6 @@ package com.example.expensetracker;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -11,11 +10,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -30,6 +29,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
 
 public class UpdateExpenseActivity extends AppCompatActivity {
 
@@ -37,11 +37,12 @@ public class UpdateExpenseActivity extends AppCompatActivity {
     // references to edit texts and other fields in layout
     EditText editText_Amount;
     EditText editText_Category;
-    EditText editText_Wallet;
+    TextView textView_Account;
     TextView textView_date;
     LocalDateTime localDateTime;
     LocalDate localDate;
     Toolbar toolbar;
+    View view_account;
     View view_date;
     View discard_view;
     View delete_view;
@@ -55,8 +56,9 @@ public class UpdateExpenseActivity extends AppCompatActivity {
 
         editText_Amount = findViewById(R.id.editText_Amount_Update);
         editText_Category = findViewById(R.id.editText_Category_Update);
-        editText_Wallet = findViewById(R.id.editText_Wallet_Update);
+        textView_Account = findViewById(R.id.editText_Wallet_Update);
         textView_date = findViewById(R.id.textView_date_Update);
+        view_account = findViewById(R.id.view_account);
         view_date = findViewById(R.id.view_date_Update);
         discard_view = findViewById(R.id.expense_discard);
         delete_view = findViewById(R.id.expense_delete);
@@ -98,7 +100,7 @@ public class UpdateExpenseActivity extends AppCompatActivity {
         // set all edit texts and date to selected expense's details
         editText_Amount.setText(String.valueOf(oneExpense.get(0).getAmount()));
         editText_Category.setText(String.valueOf(oneExpense.get(0).getExpenseCategory()));
-        editText_Wallet.setText(String.valueOf(oneExpense.get(0).getWalletCategory()));
+        textView_Account.setText(String.valueOf(oneExpense.get(0).getWalletCategory()));
         localDate = oneExpense.get(0).getDateOfExpense();
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd LLLL, yyyy");
@@ -110,10 +112,44 @@ public class UpdateExpenseActivity extends AppCompatActivity {
         addExpenseCollapsingBar.setExpandedTitleTextAppearance(R.style.ExpandedAppBar);
         addExpenseCollapsingBar.setCollapsedTitleTextAppearance(R.style.CollapsedAppBar);
 
-//        // set textView_date to today's date by default
-//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd LLLL, yyyy");
-//        String formattedString = localDate.format(formatter);
-//        textView_date.setText(formattedString);
+        // expense account on click
+        view_account.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                List<String> accounts = dataBaseHelper.getEveryAccountList();
+
+                if (accounts.isEmpty()) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(UpdateExpenseActivity.this);
+                    builder.setTitle("No available accounts");
+                    builder.setMessage("Please add an account");
+                    builder.setPositiveButton("Ok", null);
+                    builder.show();
+                }
+                else {
+                    AlertDialog.Builder builderSingle = new AlertDialog.Builder(UpdateExpenseActivity.this);
+                    builderSingle.setTitle("Select an account");
+
+                    final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(UpdateExpenseActivity.this, android.R.layout.simple_list_item_1, accounts);
+
+                    builderSingle.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+
+                    builderSingle.setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            String strName = arrayAdapter.getItem(which);
+                            textView_Account.setText(strName);
+                        }
+                    });
+
+                    builderSingle.show();
+                }
+            }
+        });
 
         // material date picker
         MaterialDatePicker.Builder builder = MaterialDatePicker.Builder.datePicker();
@@ -159,7 +195,7 @@ public class UpdateExpenseActivity extends AppCompatActivity {
 
                         String Amount = editText_Amount.getText().toString().trim();
                         String eCategory = editText_Category.getText().toString().trim();
-                        String wCategory = editText_Wallet.getText().toString().trim();
+                        String wCategory = textView_Account.getText().toString().trim();
 
                         if (TextUtils.isEmpty(Amount)) {
                             // perform if edittext is empty
@@ -204,7 +240,7 @@ public class UpdateExpenseActivity extends AppCompatActivity {
                                     .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialogInterface, int i) {
-                                            editText_Wallet.requestFocus();
+                                            textView_Account.requestFocus();
 
                                             InputMethodManager imm = (InputMethodManager) getSystemService(UpdateExpenseActivity.this.INPUT_METHOD_SERVICE);
                                             imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);

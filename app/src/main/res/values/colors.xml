@@ -10,4 +10,5 @@
     <color name="collapsing_toolbar">#F9F9F9</color>
     <color name="accent_colour">#007AFF</color>
     <color name="list_background">#F2F2F6</color>
+    <color name="nice_green">#34C759</color>
 </resources>

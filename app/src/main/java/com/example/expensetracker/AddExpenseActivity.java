@@ -1,13 +1,11 @@
 package com.example.expensetracker;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -16,6 +14,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,6 +28,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 public class AddExpenseActivity extends AppCompatActivity {
 
@@ -36,14 +36,16 @@ public class AddExpenseActivity extends AppCompatActivity {
     // references to edit texts and other fields in layout
     EditText editText_Amount;
     EditText editText_Category;
-    EditText editText_Wallet;
+    TextView textView_Account;
     TextView textView_date;
     LocalDateTime localDateTime;
     LocalDate localDate = LocalDate.now();
     Toolbar toolbar;
+    View view_account;
     View view_date;
     View discard_view;
     ExpensesModel expensesModel;
+    DataBaseHelper dataBaseHelper = new DataBaseHelper(AddExpenseActivity.this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,8 +54,9 @@ public class AddExpenseActivity extends AppCompatActivity {
 
         editText_Amount = findViewById(R.id.editText_Amount);
         editText_Category = findViewById(R.id.editText_Category);
-        editText_Wallet = findViewById(R.id.editText_Wallet);
+        textView_Account = findViewById(R.id.editText_Wallet);
         textView_date = findViewById(R.id.textView_date);
+        view_account = findViewById(R.id.view_account);
         view_date = findViewById(R.id.view_date);
         discard_view = findViewById(R.id.expense_discard);
 
@@ -78,6 +81,45 @@ public class AddExpenseActivity extends AppCompatActivity {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd LLLL, yyyy");
         String formattedString = localDate.format(formatter);
         textView_date.setText(formattedString);
+
+        // expense account on click
+        view_account.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                List<String> accounts = dataBaseHelper.getEveryAccountList();
+
+                if (accounts.isEmpty()) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(AddExpenseActivity.this);
+                    builder.setTitle("No available accounts");
+                    builder.setMessage("Please add an account");
+                    builder.setPositiveButton("Ok", null);
+                    builder.show();
+                }
+                else {
+                    AlertDialog.Builder builderSingle = new AlertDialog.Builder(AddExpenseActivity.this);
+                    builderSingle.setTitle("Select an account");
+
+                    final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(AddExpenseActivity.this, android.R.layout.simple_list_item_1, accounts);
+
+                    builderSingle.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+
+                    builderSingle.setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            String strName = arrayAdapter.getItem(which);
+                            textView_Account.setText(strName);
+                        }
+                    });
+
+                    builderSingle.show();
+                    }
+                }
+        });
 
         // material date picker
         MaterialDatePicker.Builder builder = MaterialDatePicker.Builder.datePicker();
@@ -121,7 +163,7 @@ public class AddExpenseActivity extends AppCompatActivity {
 
                         String Amount = editText_Amount.getText().toString().trim();
                         String eCategory = editText_Category.getText().toString().trim();
-                        String wCategory = editText_Wallet.getText().toString().trim();
+                        String wCategory = textView_Account.getText().toString().trim();
 
                         if (TextUtils.isEmpty(Amount)) {
                             // perform if edittext is empty
@@ -162,11 +204,11 @@ public class AddExpenseActivity extends AppCompatActivity {
                         else if (TextUtils.isEmpty(wCategory)) {
                             // perform if edittext is empty
                             AlertDialog.Builder builder = new AlertDialog.Builder(AddExpenseActivity.this);
-                            builder.setMessage("Please Enter Account Category")
+                            builder.setMessage("Please select an account")
                                     .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialogInterface, int i) {
-                                            editText_Wallet.requestFocus();
+                                            textView_Account.requestFocus();
 
                                             InputMethodManager imm = (InputMethodManager) getSystemService(AddExpenseActivity.this.INPUT_METHOD_SERVICE);
                                             imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);

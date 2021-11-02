@@ -101,7 +101,7 @@ public class UpdateWalletActivity extends AppCompatActivity {
             public boolean onMenuItemClick(MenuItem item) {
 
                 switch (item.getItemId()) {
-                    case R.id.menu_update_expense:
+                    case R.id.menu_update_wallet:
 
                         String wCategory = editText_Wallet.getText().toString().trim();
 

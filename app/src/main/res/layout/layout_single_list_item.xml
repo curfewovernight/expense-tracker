@@ -5,12 +5,13 @@
     android:id="@+id/expense_constraint_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:foreground="?android:attr/selectableItemBackground"
     android:background="@color/white">
 
     <View
         android:id="@+id/list_divider"
         style="@style/Divider"
-        android:layout_height="1dp"
+        android:layout_height="0.8dp"
         app:layout_constraintBottom_toTopOf="@+id/view"
         app:layout_constraintEnd_toEndOf="@id/view"
         app:layout_constraintStart_toStartOf="@id/view"
@@ -31,8 +32,6 @@
         android:layout_marginStart="16dp"
         android:text="Food &amp; Beverages"
         android:textAppearance="@style/ListViewPrimary"
-        android:textSize="16sp"
-        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@id/view"
         app:layout_constraintTop_toTopOf="@+id/view" />

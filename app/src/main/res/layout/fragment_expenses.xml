@@ -55,9 +55,4 @@
 
     </androidx.recyclerview.widget.RecyclerView>
 
-    <View
-        style="@style/Divider"
-        app:layout_anchor="@id/expense_recycler"
-        app:layout_anchorGravity="bottom"/>
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
